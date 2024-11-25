@@ -14,7 +14,7 @@ class Die:
 
 
 class Player:
-    def __init__(self, is_computer, die:Die):
+    def __init__(self, die:Die, is_computer=False):
         self._is_computer = is_computer
         self._counter = 10
         self._die = die
@@ -58,12 +58,11 @@ class DiceGame:
             self._player.increment_counter()
 
 
-
 player_die = Die()
 computer_die = Die()
 
-player = Player(False, player_die)
-computer = Player(True, computer_die)
+player = Player(player_die, is_computer=False)
+computer = Player(computer_die, is_computer=True)
 
 game = DiceGame(player, computer)
 
