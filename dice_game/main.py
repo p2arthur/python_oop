@@ -30,6 +30,10 @@ class Player:
     def die(self):
         return self._die
 
+    @property
+    def is_computer(self):
+        return self._is_computer
+
     def roll_die(self):
        die_value =  self._die.roll_die()
        return die_value
@@ -83,20 +87,34 @@ class DiceGame:
         else:
             print('Its a tie')
 
-    def update_counter(self, winner:Player, loser:Player):
+    @staticmethod
+    def update_counter( winner:Player, loser:Player):
         winner.decrement_counter()
         loser.increment_counter()
 
     def check_game_over(self)->bool:
 
         if self._computer.counter == 0:
-                print('---------------------Computer wins-------------------')
-                return True
+            print('---------------------Computer wins-------------------')
+            self.show_game_over(self._computer)
+            return True
         if self._player.counter == 0:
-                print('---------------------Player wins---------------------')
-                return True
+            self.show_game_over(self._player)
+            print('---------------------Player wins---------------------')
+            return True
         else:
             return False
+
+    @staticmethod
+    def show_game_over(winner:Player):
+        if winner.is_computer:
+            print('-----------------------------------------------')
+            print('Computer wins')
+            print('-----------------------------------------------')
+        else:
+            print('-----------------------------------------------')
+            print('Player wins')
+            print('-----------------------------------------------')
 
 
 
