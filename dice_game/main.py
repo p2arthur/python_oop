@@ -5,10 +5,13 @@ class Die:
     def __init__(self):
         self._value = None
 
+    @property
+    def value(self):
+        return self._value
+
     def roll_die(self):
         print('Rolling die...')
         random_value = random.randint(1,6)
-        print(f'The die value is: {random_value}')
         self._value = random_value
         return  self._value
 
@@ -22,6 +25,10 @@ class Player:
     @property
     def counter(self):
         return self._counter
+
+    @property
+    def die(self):
+        return self._die
 
     def roll_die(self):
        die_value =  self._die.roll_die()
@@ -40,22 +47,57 @@ class DiceGame:
         self._computer = computer_player
 
     def start_game(self):
-        print('Dice game is starting')
+        print('=====================================')
+        print('Welcome to Roll the Dice game!')
+        print('=====================================')
         while self._player.counter > 0 < self._computer.counter:
             self._start_round_()
+            game_over = self.check_game_over()
+            if game_over:
+                break
 
     def _start_round_(self):
-        human_player_die = self._player.roll_die()
-        computer_player_die = self._computer.roll_die()
+        self.print_round_welcome()
+        player_value = self._player.roll_die()
+        computer_value = self._computer.roll_die()
+        self.print_dice()
+        self.check_winner(player_value, computer_value)
+        self.print_game_score()
 
-        if human_player_die > computer_player_die:
-            print('Player win')
-            self._player.decrement_counter()
-            self._computer.increment_counter()
-        elif computer_player_die > human_player_die:
-            print('Computer win')
-            self._computer.decrement_counter()
-            self._player.increment_counter()
+    @staticmethod
+    def print_round_welcome():
+        print('--------- NEW ROUND ----------')
+        input('Press any key to roll the dice')
+
+    def print_game_score(self):
+        print(f'Player counter:{self._player.counter} | Computer counter: {self._computer.counter}')
+
+    def print_dice(self):
+        print(f'Player die:{self._player.die.value} | Computer die: {self._computer.die.value}')
+
+    def check_winner(self, player_value, computer_value):
+        if player_value > computer_value:
+            self.update_counter(self._player, self._computer)
+        elif computer_value > player_value:
+            self.update_counter(self._computer, self._player)
+        else:
+            print('Its a tie')
+
+    def update_counter(self, winner:Player, loser:Player):
+        winner.decrement_counter()
+        loser.increment_counter()
+
+    def check_game_over(self)->bool:
+
+        if self._computer.counter == 0:
+                print('---------------------Computer wins-------------------')
+                return True
+        if self._player.counter == 0:
+                print('---------------------Player wins---------------------')
+                return True
+        else:
+            return False
+
 
 
 player_die = Die()
